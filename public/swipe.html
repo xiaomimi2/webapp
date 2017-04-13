@@ -1,0 +1,152 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>slide无限滑动</title>
+    <style>
+        .slide .img{
+            -webkit-transition: opacity 0.25s ease-in-out;
+            -moz-transition:opacity 0.25s ease-in-out;
+            -o-transition:opacity 0.25s ease-in-out;
+            transition:opacity 0.25s ease-in-out;
+        }
+    </style>
+</head>
+<body>
+    <section>
+        <div class="outer">
+            <div class="slide">
+                <img  alt="" data-src="images/1.jpg" class="img"> 
+            </div>
+             <div class="slide">
+                <img  alt="" data-src="images/10.jpg" class="img"> 
+            </div>
+             <div class="slide">
+                <img  alt="" data-src="images/11.jpg" class="img"> 
+            </div>
+             <div class="slide">
+                <img  alt="" data-src="images/13.jpg" class="img"> 
+            </div>
+             <div class="slide">
+                <img  alt="" data-src="images/12.jpg" class="img"> 
+            </div>
+             <div class="slide">
+                <img  alt="" data-src="images/14.jpg" class="img"> 
+            </div>
+             <div class="slide">
+                <img  alt="" data-src="images/15.jpg" class="img"> 
+            </div>
+             <div class="slide">
+                <img  alt="" data-src="images/16.jpg" class="img"> 
+            </div>
+             <div class="slide">
+                <img  alt="" data-src="images/17.jpg" class="img"> 
+            </div>
+             <div class="slide">
+                <img  alt="" data-src="images/2.jpg" class="img"> 
+            </div>
+             <div class="slide">
+                <img  alt="" data-src="images/3.jpg" class="img"> 
+            </div>
+            <div class="slide">
+                <img  alt="" data-src="images/9.jpg" class="img"> 
+            </div>
+        </div>
+    </section>
+
+   
+</body>
+</html>
+ <script>
+ /*slideCache存储页面数据，规定的图片数*/
+    // var slideCache
+    // function updateSlideCache (node) {
+    //     var list = node.querySelectorAll('.slide')
+    //     var len = list.length
+    //     var obj
+    //     slideCache = []
+    //     for (var i = 0; i < len; i++) {
+    //         obj = {
+    //             node: list[i],
+    //             id: list[i].getAttribute('data-id'),
+    //             img: list[i].querySelector('.img')
+    //         }
+    //         obj.src = obj.img.getAttribute('data-src')
+    //         slideCache.push(obj)
+    //     }
+    // }
+    // updateSlideCache()
+    // function handleDefer () {
+    //     console.time('defer')
+    //     var i, list, thisImg, deferSrc, img, handler
+    //     list = slideCache
+    //     var len = list.length
+    //     for (i = 0; i < len; i++) {
+    //         thisImg = list[i].img
+    //         deferSrc = list[i].src
+    //         if (isVisible(list[i].id)) {
+    //             handler = function () {
+    //                 var node, src
+    //                 node = thisImg
+    //                 src = deferSrc
+    //                 return function () {
+    //                     node.src = src
+    //                     node.style.opacity = 1
+    //                     loaded[deferSrc] = true
+    //                 }
+    //             }()
+    //             img = new Image()
+    //             img.onload = handler
+    //             img.src = list[i].src
+    //         }
+    //     }
+    //     console.timeEnd('defer')
+    // }
+    // var slideMap = {}
+    // function isVisible (id) {
+    //     var offTop, offsetHeight, data
+    //     if (slideMap[id]) {
+    //         offTop = slideMap[id].offTop
+    //         offsetHeight = slideMap[id].offsetHeight
+    //     } else {
+    //         var node = document.getElementById('s-' + id)
+    //         offsetHeight = parseInt(node.offsetHeight)
+    //         offTop = parseInt(node.offsetTop)
+    //         data = {
+    //             node: node,
+    //             offTop: offTop,
+    //             offsetHeight: offsetHeight
+    //         }
+    //         slideMap[id] = data
+    //         if (offTop + offsetHeight > topViewPort && offTop < bottomViewPort) {
+    //             return true
+    //         } else {
+    //             return false
+    //         }
+    //     }
+    //     var fetching = false
+    //     function fetchBirds () {
+    //         if (fetching) {
+    //             return
+    //         } else {
+    //             fetching = true
+    //         }
+    //     }
+
+    // }
+    // (function () {
+    //     var lastScrollY = window.pageYOffset,
+    //     innerHeight,
+    //     topViewPort,
+    //     bottomViewPort
+    //     scollY = window.pageYOffset || window.scrollY
+    //     innerHeight = window.innerHeight
+    //     topViewPort = scollY - 1000
+    //     bottomViewPort = innerHeight + scrollY + 1000
+    //     if (window.scrollY + innerHeight + 2000 > document.body.offsetHeight) {
+    //         fetchBirds()
+    //     }
+    //     handleDefer ()
+    // })()
+    window.addEventListener('scroll', handerScroll)
+</script>

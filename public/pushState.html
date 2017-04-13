@@ -1,0 +1,126 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<title>html5 history api test</title>
+</head>
+<body>
+	<div id="num">2</div>
+	<a href="" id="turn">add Nun</a>
+	<!-- <script>
+		var num = getID('num');
+		var turn = getID('turn');
+		function getID(string){
+			return document.getElementById(string)
+		}
+
+		function setNumFromUrl(){
+			var match = location.search.match(/Num=([0-9]+)/);
+			if(match){
+				num.innerHTML = match[1];
+			}else{
+				num.innerHTML = 1;
+			}
+		}
+		
+
+		turn.onclick=function(ev){
+			ev.preventDefault();
+			var init = parseInt(num.innerHTML)+1;
+			num.innerHTML=init;
+			history.pushState({count:init},null,'?Num='+init)
+		}
+
+		window.addEventListener('popstate',function(ev){
+			console.log('popstate')
+			if(ev.state && ev.state.count){
+				num.innerHTML = ev.state.count;
+			}else{
+				setNumFromUrl();
+			}
+		},false)
+
+      //为了保持降级后用的也是hash的方式存储。可以用replaceState来更改网址
+
+	</script> -->
+	<script>
+		function getID(string){
+			return document.getElementById(string)
+		}
+		//升级版本
+		var hasHash = false;
+		var hashExp = /#([0-9]+)/;
+		var num = getID('num');
+		var turn = getID('turn');
+		/**
+		 * [handleStateChange description] 需要作出的改变
+		 * @param  {[type]} number [description]
+		 * @return {[type]}        [description]
+		 */
+		function handleStateChange(number){
+			num.innerHTML = number;
+		}
+
+
+		/**
+		 * [setNumFromUrl description] 如果支持pushState,那么分为两种情况
+		 * 1.客户以hash方式访问
+		 * 2.客户以url地址访问
+		 */
+		function setNumFromUrl(){
+			var match;
+			if(!hasHash){
+				if(location.search){
+					 match = location.search.match(/Num=([0-9]+)/);
+				}else if(location.hash){
+				    match = location.hash.match(hashExp); 
+					match? history.replaceState({count:match[1]},null,'?Num='+match[1]) : match;
+				}
+				
+			}else{
+				var match = location.hash.match(hashExp); 
+			}
+
+			if(match){
+				handleStateChange(match[1]);
+			}else{
+				handleStateChange(1);
+			}
+		}
+
+
+		if(!history.pushState){
+			hashHash = true;
+		}
+
+		turn.onclick=function(ev){
+			ev.preventDefault();
+			var init = parseInt(num.innerHTML)+1;
+			num.innerHTML=init;
+			if(!hasHash){
+				history.pushState({count:init},null,'?Num='+init)
+			}else{
+				location.hash = '#'+init
+			}
+			
+		}
+
+		if(!hasHash){
+			addEventListener('popstate',function(ev){
+				if(ev.state && ev.state.count){
+					// handleStateChange(ev.state.count)
+				}else{
+					setNumFromUrl();
+				}
+			},false)
+		}else{
+			addEventListener('hashchange',function(ev){
+				setNumFromUrl();
+			})
+		}
+
+
+		
+	</script>
+</body>
+</html>

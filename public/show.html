@@ -1,0 +1,223 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>图片放大</title>
+    <meta name="viewport" content="width=device-width,initial-scale=1">
+    <style>
+        html,body{
+            height:100%;
+        }
+        .line{
+            display:-webkit-box;
+            display:-ms-box;
+            display:-moz-box;
+           /* -webkit-box-pack:justify;*/
+            width:100%;
+            -webkit-box-align:end;
+            -ms-box-align:end;
+            -moz-box-align:end;
+        }
+        /*这里加了宽度就可以实现均分了*/
+        .item{
+            -webkit-box-flex:1;
+            padding:5px;
+            height:100%;
+            text-align:center;
+            width:0%;
+            margin-bottom:20px;
+        }
+        .item img{
+           max-width:100%;
+            
+            /*height:100%;*/
+        }
+        .mask{
+            width:100%;
+            height:100%;
+            position:absolute;
+            left:0;
+            top:0;
+            background-color:rgba(0,0,0,.9);
+            display:none;
+           
+        }
+        .mask img{
+            position:absolute;
+            left:0;
+            right:0;
+            top:0;
+            bottom:0;
+            margin:auto;
+            transition:all .5s ease-in;
+            opacity:0;
+            height:0;
+
+        }
+        .mask.show{
+           display:block;
+        }
+    </style>
+</head>
+<body>
+    <div class="line">
+        <div class="item">
+            <img src="images/1.jpg" alt="">
+        </div>
+        <div class="item">
+            <img src="images/2.jpg" alt="">
+        </div>
+        <div class="item">
+            <img src="images/3.jpg" alt="">
+        </div>
+        <div class="item">
+            <img src="images/11.jpg" alt="">
+        </div>
+    </div>
+     <div class="line">
+        <div class="item">
+            <img src="images/12.jpg" alt="">
+        </div>
+        <div class="item">
+            <img src="images/10.jpg" alt="">
+        </div>
+        <div class="item">
+            <img src="images/13.jpg" alt="">
+        </div>
+        <div class="item">
+            <img src="images/17.jpg" alt="">
+        </div>
+    </div>
+    <div class="mask">
+        <img src="" alt="">
+    </div>
+    <script>
+        (function(){
+            var TOUCHSTART
+            var TOUCHEND
+            if (typeof window.ontouchstart !== 'undefined') {
+                TOUCHSTART = 'touchstart';
+                TOUCHEND = 'touchend';
+            } else if (typeof window.onmspointerdown !== 'undefined') {
+                TOUCHSTART = 'MSPointerDown';
+                TOUCHEND = 'MSPointerUp';
+            } else {
+                TOUCHSTART = "mousedown";
+                TOUCHEND = "mouseup";
+            }
+
+            function NodeFacade (node) {
+                this._node = node;
+            }
+
+            NodeFacade.prototype.getDomNode = function(){
+                return this._node;
+            }
+            NodeFacade.prototype.on = function (evt,callback) {
+                if(evt === 'tap') {
+                    this._node.addEventListener(TOUCHSTART,callback)
+                } else if (evt === 'tapend') {
+                    this._node.addEventListener(TOUCHEND,callback)
+                } else {
+                    this._node.addEventListener(evt,callback);
+                }
+                return this;
+            }
+            NodeFacade.prototype.off = function (evt,callback) {
+                if(evt === 'tap') {
+                    this._node.removeEventListener(TOUCHSTART,callback)
+                } else if (evt === 'tapend') {
+                    this._node.removeEventListener(TOUCHEND,callback)
+                } else {
+                    this._node.removeEventListener(evt,callback);
+                }
+                return this
+            }
+            window.$ =  function (node) {
+               if (node) {
+                    return new NodeFacade(node);
+               } else {
+                    return null;
+               }
+            }
+        })()
+        var items = document.querySelectorAll('.item');
+        var mask = document.querySelector('.mask');
+        var img = mask.getElementsByTagName('img')[0];
+        for(var i = 0, len = items.length; i < len; i++) {
+            $(items[i]).on('tap',function(){
+                mask.className="mask show";
+                img.src = this.getElementsByTagName('img')[0].src;
+                // img.style.transition="opacity 1s ease-in";
+                setTimeout(function(){
+                    img.style.opacity = 1;
+                    img.style.maxWidth = '100%';
+                    img.style.height = '300px';
+                },100)
+            })
+        }
+        // items.forEach(function(item){
+        //     $(item).on('tap',function(){
+        //         alert("tap")
+        //         mask.className="mask show";
+        //         img.src = item.getElementsByTagName('img')[0].src;
+        //         // img.style.transition="opacity 1s ease-in";
+        //         setTimeout(function(){
+        //             img.style.opacity = 1;
+        //             img.style.maxWidth = '100%';
+        //             img.style.height = '300px';
+        //         },100)
+        //     })
+        // })
+
+        $(mask).on('tap',function(){
+            mask.className = "mask";
+            img.src ='';
+            img.style.opacity = 0; 
+            img.style.maxWidth = '';
+            img.style.height = 0;
+        })
+
+        /*封装轻触事件*/
+        // function addTapListener(node,callback){
+        //     var startEvent = "mousedown"
+        //     var endEvent = "mouseup"
+        //     if (typeof window.ontouchstart !== undefined) {
+        //         startEvent = "touchstart";
+        //         endEvent = "touchend";
+        //     }
+
+        //     node.addEventListener(startEvent,function(e){
+        //         var tap = document.createEvent('CustomEvent');
+        //         tap.initCustomEvent('tap',true,true,null);
+        //         node.dispatchEvent(tap);
+        //     })
+        //     node.addEventListener(endEvent,function(e){
+        //         var tapend = document.createEvent('CustomEvent');
+        //         tapend.initCustomEvent('tapend',true,true,null);
+        //         node.dispatch(tapend);
+        //     })
+
+        //     node.addEventListener('tap',callback);
+        // }
+    </script>
+
+</body>
+</html>
+
+<!-- box-flex主要让自容器针对父容器宽度按一定的规则进行划分
+如果定了display:box，该容器则定义了为内联元素。使用margin:0 auto是无效的。只能通过设置它的父容器text-align:center才有用。
+子元素设置box-flex 3,2,1分别按此比例划分。
+
+box属性还有哪些？
+box-orient确定子容器的排列方式 vertical horizontal inline-axis block-axis inherit
+
+如果父容器选择了水平排列（horizontal inline-axis）如果父容器高度定义了，则按父容器。子容器无效符，否则按子容器的最高来
+
+如果定义了竖向排列（vertical block-axis） 父容器定义了宽度，子元素定义无效。否则按照子元素的最大宽度值来。
+
+box-direction reverse 属性表示反转
+
+box-align  表示子元素中的垂直对齐方式。  start end center baselne stretch
+
+box-pack 表示子元素的水平对齐方式  start end center justify -->

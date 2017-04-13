@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>simple Switch</title>
+    <meta name = "viewport" content="width=device-width,initial-scale=1,user-scaleable=no,maximum-scale=1.0">
+    <style>
+        .switchwrap {
+            width:200px;
+            height:60px;
+            border:1px solid #ccc;
+            border-radius:30px;
+        }
+        .switch {
+            width:60px;
+            height:60px;
+            border-radius:50%;
+            background-color: rgba(255,0,0,.5);
+            position:relative;
+            left:0;
+            top:0;
+        }
+    </style>
+</head>
+<body>
+    <div class="switchwrap">
+        <div class="switch"></div>
+    </div>
+</body>
+</html>
+<script>
+    window.$ = function (selector) {
+        return document.querySelector(selector)
+    }
+
+    var TRANSITION_END = 'webkitTransitionEnd'
+    var TRANSITION_CSS = '-webkit-transition'
+    var TRANSFORM_CSS = '-webkit-transform'
+    var TRANSFORM = 'webkitTransform'
+    var TRANSITION = 'webkitTransition'
+    var len = parseInt($('.switchwrap').offsetLeft)
+    var icon = $('.switch')
+    var moveLength
+
+    if (typeof document.body.style.transition !== 'undefined') {
+        TRANSITION_END = 'transitionEnd'
+        TRANSITION_CSS = 'transition'
+        TRANSFORM_CSS = 'transform'
+        TRANSFORM = 'transform'
+        TRANSITION = 'transition'
+    }
+
+   
+    function handleTouch (e) {
+        // console.log(e.touches)
+        // console.log(e.type)
+        switch (e.type) {
+        case 'touchstart' :
+            console.log('touchstart')
+            break
+        case 'touchmove' :
+            console.log('touchmove')
+            move(e)
+            break
+        case 'touchend':
+            end(e)
+            break
+        }
+    }
+    function move (e) {
+        var x = e.touches[0].pageX - len
+        moveLength = x < 0 ?  0 : (x > 140? (140 + 'px') : (x + 'px'))
+        icon.style[TRANSFORM] = 'translate3d(' + moveLength + ',0,0)'
+    }
+
+    function end () {
+        var x = parseInt(moveLength)
+        var endpoint
+        console.log(x)
+        if ( x > 70) {
+            endpoint = 140 + 'px'
+        } else {
+            endpoint = 0
+        }
+        icon.style[TRANSITION] = TRANSFORM_CSS + '0.5s ease-put'
+        icon.style[TRANSFORM] = 'translate3d(' + endpoint + ',0,0)'
+    }
+    $('.switchwrap').addEventListener('touchstart', handleTouch)
+    $('.switchwrap').addEventListener('touchmove', handleTouch)
+    $('.switchwrap').addEventListener('touchend', handleTouch)
+</script>

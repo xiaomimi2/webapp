@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<title>offsetTop</title>
+	<style>
+		*{
+			padding:0;
+			margin:0;
+		}
+		div.outer{
+			padding:15px;
+			width:300px;
+			margin-top:100px;
+			height:300px;
+			border:2px solid black;
+			position:relative;
+		}
+		div.box{
+			background-color: red;
+			width:50px;
+			margin:20px;
+			height:30px;
+		}
+	</style>
+</head>
+<body>
+
+	<div class="outer">
+		<div class="box"></div>
+	</div>
+	<script>
+		var outer = document.getElementsByTagName('div')[0];
+		var box =  document.getElementsByTagName('div')[1]
+
+		console.log(box.offsetTop)//142   100+20+2+20  这个结果是相对于body的
+		console.log(box.offsetTop)//60 outer加上position后这是相对于border来说的尺寸。把父级的padding也算在里面了。
+
+
+
+		/*offsetParent:与当前元素最近的经过定位的position不等于static的父级元素
+		元素本身fixed定位，offsetParent为null
+		元素本身无fixed定位，父级元素未定位，offsetParent是body
+		元素本身无fixed定位，且父级元素存在定位的元素，offsetParent的结果最近的这个定位过的父级元素
+		body元素的offsetParent为null
+
+
+		IE7下有bug：如果元素本身有定位，父级无定位，offsetparent为html；
+		如果父级元素存在触发haslayout的元素或经过定位的元素，且offsetParent的结果为离自身元素最近的经过定位或触发haslayout的父级元素
+
+
+		注意事项
+		offsetHeight,offsetWidth等只读，如果元素设置了display:none,值都为0;每次访问偏移量属性都要重新计算
+		*/
+	</script>
+</body>
+</html>

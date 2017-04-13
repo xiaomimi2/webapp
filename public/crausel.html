@@ -1,0 +1,165 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Document</title>
+    <link rel="stylesheet" href="css/crausel.css">
+</head>
+<body>
+    <ul>
+        <li>
+            <a href="" class="slidelink">
+                <img src="" alt="" data-src=""  data-full-height="495" data-full-width="640" height="75" width="75">
+            </a>
+        </li>
+    </ul>    
+</body>
+</html>
+<script>
+function $ (sec) {
+    return document.querySelector(sec)
+}
+var direction = 0
+var currentSlide
+var slideData = []
+var boundingBox = [0, 0]
+var lastPos
+var TRANSITION_END = 'webkitTransitionEnd'
+var TRANSITION_CSS = '-webkit-transition'
+var TRANSFORM_CSS = '-webkit-transform'
+var TRANSFORM = 'webkitTransform'
+var TRANSITION = 'webkitTransition'
+var len = parseInt($('.switchwrap').offsetLeft)
+var icon = $('.switch')
+var moveLength
+var parentNode = $('.carousel')
+
+if (typeof document.body.style.transition !== 'undefined') {
+   TRANSITION_END = 'transitionEnd'
+   TRANSITION_CSS = 'transition'
+   TRANSFORM_CSS = 'transform'
+   TRANSFORM = 'transform'
+   TRANSITION = 'transition'
+}
+function slideTemplate () {
+    var div = document.createElement('div')
+    div.className = 'slide'
+}
+function buildSlide (slideNum) {
+    var thisSlide, img, w, h, s, scaleFactor
+    if (!slideData[slideNum] || slideData[slideNum].node) {
+        return false
+    }
+    thisSlide = slideData[slideNum]
+    s = slideTemplate(thisSlide)
+    img = s.querySelector('div')
+    if (thisSlide.width > boundingBox[0]|| thisSlide.height > boundingBox[1]) {
+        if (thisSlide.width > thisSlide.height) {
+            scaleFactor = boundingBox[0] / thisSlide.width
+        } else {
+            scaleFactor = boundingBox[1] / thisSlide.height
+        }
+        w = Math.round(thisSlide.width * scaleFactor)
+        h = Math.round(thisSlide.height * scaleFactor)
+        img.style.height = h + 'px'
+        img.style.width = w + 'px'
+    } else {
+        img.style.height = thisSlide.height + 'px' //原图大小
+        img.style.width = thisSlide.width + 'px'
+    }
+   thisSlide.node = s //这里增加了node属性。说明这个已经创建过了
+   wrapper.appendChild(s);
+   setPosition(s,boundingBox(0));
+   return s;
+
+} 
+
+function addTransition (node) {
+    node.style[TRANSITION] = TRANSITION_CSS + '.25s ease-in-out'
+}
+function setPosition (node, left) {
+    node.style[TRANSFORM] = 'translate3d(' + left + 'px, 0, 0)'
+}
+function cleanTransition (node) {
+    node.style[TRANSITION] = 'none'
+}
+function init () {
+    var slides = parentNode.querySelectorAll('li')
+    var thisSlide,thisImg
+    for (var i = 0; i < slides.length; i++) {
+        thisSlide = {}
+        thisImg = slides[i].querySelector('img')
+        thisSlide.url = thisImg.getAttribute('src')// 这里可以替换大图片
+        thisSlide.height = thisImg.getAttribute('data-full-height')
+        thisSlide.width = thisImg.getAttribute('data-full-width')
+        thisSlide.link = slides[i].querySelector('a').href
+        slideData.push(thisSlide)
+    }
+}
+function handleTouchEvents (e) {
+    if (e.type === 'touchstart') {
+         var startPos = e.touches[0].clientX
+         lastPos = startPos
+         direction = 0
+         if (slideData[currentSlide] && slideData[currentSlide].node) {
+
+         }
+    } else if (e.type === 'touchmove') {
+        e.preventDefault()
+        var NowPos = e.touches[0].clientX
+        if (lastPos > NowPos) {
+            direction = -1
+        } else {
+            direction = 1
+        }
+        if (slideData(currentSlide)) {
+            setPosition(slideData[currentSlide].node, e.touches[0].clientX)
+        }
+        if (direction !== 0 && slideData[currentSlide + direction]) {
+            if (direction > 0) {
+                setPosition(slideData[currentSlide + direction].node, (e.touches[0].clientX - startPos))
+            } else {
+                setPosition(slideData[currentSlide + direction].node)
+            }
+        }
+    } else if (e.type === 'touchend') {
+    /* 这里实现回弹*/
+        if (lastPos - startPos > 50) {
+            goTo(currentSlide - 1)
+        } else if (lastPos - startPos < -50) {
+            goTo(currentSlide + 1)
+        }
+    }
+}
+
+function goTo (slideNum) {
+    var thisSlide
+    if (!slideData[slideNum]) {
+        goTo (currentSlide)
+    } else if (Math.abs(currentSlide - slideNum) !== 1 && slideData[currentSlide] && slideData[currentSlide].node) {
+        addTransition(slideData[currentSlide].node)
+        setPosition(slideData[currentSlide].node,0)
+    }
+   
+
+    thisSLide = slideData[slideNum]
+    buildSlide (slideNum)
+    buildSlide (slideNum + 1)
+    buildSlide (slideNum - 1)
+    if (thisSlide.node) {
+        addTransition(thisSlide.node)
+        setPosition(thisSlide.node, 0)
+    }
+    currentSlide = slideNum
+
+}
+
+function attachEvent () {
+    var bd = document.querySelector('html')
+    bd.addEventListener('touchmove', handleTouchEvents)
+    bd.addEventListener('touchstart', handleTouchEvents)
+    bd.addEventListener('touchend', handleTouchEvents)
+}
+
+
+</script>
