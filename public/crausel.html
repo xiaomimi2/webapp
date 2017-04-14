@@ -12,6 +12,11 @@
                 <img src="" alt="" data-src=""  data-full-height="495" data-full-width="640" height="75" width="75">
             </a>
         </li>
+        <div class="slide">
+            <a href="">
+                <img src="/empty.gif" alt="" class="img" data-src="">
+            </a>
+        </div>
     </ul>    
 </body>
 </html>
@@ -41,6 +46,7 @@ if (typeof document.body.style.transition !== 'undefined') {
    TRANSFORM = 'transform'
    TRANSITION = 'transition'
 }
+
 function slideTemplate () {
     var div = document.createElement('div')
     div.className = 'slide'
@@ -67,10 +73,10 @@ function buildSlide (slideNum) {
         img.style.height = thisSlide.height + 'px' //原图大小
         img.style.width = thisSlide.width + 'px'
     }
-   thisSlide.node = s //这里增加了node属性。说明这个已经创建过了
-   wrapper.appendChild(s);
-   setPosition(s,boundingBox(0));
-   return s;
+   thisSlide.node = s // 这里增加了node属性。说明这个已经创建过了
+   wrapper.appendChild(s)
+   setPosition(s, boundingBox[0])
+   return s
 
 } 
 
@@ -85,7 +91,7 @@ function cleanTransition (node) {
 }
 function init () {
     var slides = parentNode.querySelectorAll('li')
-    var thisSlide,thisImg
+    var thisSlide, thisImg
     for (var i = 0; i < slides.length; i++) {
         thisSlide = {}
         thisImg = slides[i].querySelector('img')
@@ -93,7 +99,7 @@ function init () {
         thisSlide.height = thisImg.getAttribute('data-full-height')
         thisSlide.width = thisImg.getAttribute('data-full-width')
         thisSlide.link = slides[i].querySelector('a').href
-        slideData.push(thisSlide)
+        slideData.push(thisSlide);
     }
 }
 function handleTouchEvents (e) {
@@ -123,7 +129,7 @@ function handleTouchEvents (e) {
             }
         }
     } else if (e.type === 'touchend') {
-    /* 这里实现回弹*/
+/*这里实现回弹*/
         if (lastPos - startPos > 50) {
             goTo(currentSlide - 1)
         } else if (lastPos - startPos < -50) {
